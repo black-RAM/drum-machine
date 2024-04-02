@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Component } from 'react'
+import PropTypes from 'prop-types'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const DrumPad = props => (
+  <button type="button" className="drum-pad" id={props.data.name}>
+    <audio src={props.data.url} id={props.data.key} className="clip"></audio>
+    <p>{props.data.key}</p>
+  </button>
+)
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
+
+  render() {
+    const keypadElements = this.props.audios.map((item, index) => {
+      return <DrumPad data={item} key={index}/>
+    })
+
+    return (
+      <div id="drum-machine">
+        <div>{keypadElements}</div>
+        <div id="display"></div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    )
+  }
+}
+
+const audioItem = PropTypes.shape({
+  key: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired
+})
+
+DrumPad.propTypes = {
+  data: audioItem,
+}
+
+App.propTypes = {
+  audios: PropTypes.arrayOf(audioItem)
 }
 
 export default App
